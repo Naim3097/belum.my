@@ -93,7 +93,7 @@ export default function AboutPage() {
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
             <Image
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg"
+              src="/images/houseboat-01.png"
               alt="Temenggor Lake"
               fill
               className="object-cover"

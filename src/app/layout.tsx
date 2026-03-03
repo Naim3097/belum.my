@@ -44,7 +44,7 @@ export const metadata: Metadata = {
       "6 curated houseboats on Temenggor Lake. Gateway to the 130-million-year-old Royal Belum Rainforest, Perak, Malaysia.",
     images: [
       {
-        url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
+        url: "/images/houseboat-01.png",
         width: 1280,
         height: 853,
         alt: "Temenggor Lake, Royal Belum Rainforest",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     description:
       "6 curated houseboats. Kayaking, jungle trekking, fishing, and more on Malaysia's oldest rainforest lake.",
     images: [
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
+      "/images/houseboat-01.png",
     ],
   },
   robots: {

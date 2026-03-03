@@ -52,7 +52,7 @@ Regardless of when you visit, pack light, quick-dry clothing, insect repellent, 
 The standard access point is **Jeti Awam Pulau Banding** in Gerik, Perak — approximately 4 hours from Kuala Lumpur via the East-West Highway (Route 4). All houseboat operators on our platform provide detailed directions and can arrange transfers from Gerik town.
     `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
+      "/images/houseboat-01.png",
     date: "2025-01-15",
     author: "Editorial Team",
     category: "Guide",
@@ -97,7 +97,7 @@ Temenggor Lake has earned its reputation as one of Southeast Asia's finest fresh
 Book with **The Angler** houseboat, captained by the legendary Captain Daud. With 25+ years on these waters, he knows every honey hole, feeding pattern, and seasonal migration route.
     `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Land_and_Sea_Royal_Belum_State_Park.jpg/960px-Land_and_Sea_Royal_Belum_State_Park.jpg",
+      "/images/houseboat-07.png",
     date: "2025-02-08",
     author: "Captain Daud",
     category: "Adventure",
@@ -144,7 +144,7 @@ Our operators ensure that all cultural visits are:
 Several of our houseboat operators, particularly **Casuarina** captained by Captain Zainab, have built long-term relationships with Orang Asli communities. A percentage of booking fees is directed to community-identified needs including clean water systems, educational materials, and healthcare access.
     `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kampung_Orang_Asli_Sungai_Chendon_1.jpg/1280px-Kampung_Orang_Asli_Sungai_Chendon_1.jpg",
+      "/images/houseboat-10.png",
     date: "2025-03-01",
     author: "Captain Zainab",
     category: "Culture",
@@ -211,7 +211,7 @@ Over **300 bird species** have been recorded in the park.
 5. **Be patient** — The best sightings come to those who wait
     `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/The_Royal_Belum_State_Park%2C_Perak%2C_Malaysia.jpg/1280px-The_Royal_Belum_State_Park%2C_Perak%2C_Malaysia.jpg",
+      "/images/houseboat-04.png",
     date: "2025-03-20",
     author: "Editorial Team",
     category: "Nature",
@@ -266,7 +266,7 @@ The most remote and rewarding waterfall in the list. Accessible only by deep-riv
 - **Leave no trace** — carry all rubbish out with you
     `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg/720px-Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg",
+      "/images/houseboat-05.png",
     date: "2025-04-10",
     author: "Captain Rashid",
     category: "Adventure",
@@ -327,7 +327,7 @@ Every houseboat operator listed on our platform has signed a conservation charte
 - Annual conservation contribution
     `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Royal_Belum_State_Park.jpg/1280px-Royal_Belum_State_Park.jpg",
+      "/images/houseboat-09.png",
     date: "2025-04-25",
     author: "Editorial Team",
     category: "Nature",

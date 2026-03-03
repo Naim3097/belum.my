@@ -12,7 +12,7 @@ const baseActivities = [
     description:
       "Navigate the calm waters on traditional bamboo rafts, connecting with the ancient ways of the river.",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Royal_Belum_State_Park_on_a_sunny_day.jpg/1280px-Royal_Belum_State_Park_on_a_sunny_day.jpg",
+      "/images/houseboat-03.png",
     slug: "bamboo-rafting",
   },
   {
@@ -20,7 +20,7 @@ const baseActivities = [
     description:
       "Walk among giants. Discover the hidden waterfalls and the elusive Rafflesia in the heart of Belum.",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg/720px-Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg",
+      "/images/houseboat-05.png",
     slug: "jungle-trekking",
   },
   {
@@ -28,7 +28,7 @@ const baseActivities = [
     description:
       "Challenge the legendary Toman (Giant Snakehead) in one of Southeast Asia's premier fishing destinations.",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Land_and_Sea_Royal_Belum_State_Park.jpg/960px-Land_and_Sea_Royal_Belum_State_Park.jpg",
+      "/images/houseboat-07.png",
     slug: "sport-fishing",
   },
   {
@@ -36,7 +36,7 @@ const baseActivities = [
     description:
       "Visit the Orang Asli villages. Experience the Sewang cultural dance and learn their harmonious way of life.",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kampung_Orang_Asli_Sungai_Chendon_1.jpg/1280px-Kampung_Orang_Asli_Sungai_Chendon_1.jpg",
+      "/images/houseboat-10.png",
     slug: "orang-asli-village-visit",
   },
 ];

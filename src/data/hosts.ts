@@ -46,13 +46,13 @@ export const hosts: Host[] = [
       "A veteran of Temenggor Lake with over 12 years navigating these waters. Captain Azman knows every tributary, fishing spot, and waterfall access point on the lake. He grew up in the Gerik community and works closely with local Orang Asli guides.",
     capacity: 25,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
+      "/images/houseboat-01.png",
     gallery: [
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Royal_Belum_State_Park_by_boat.jpg/1920px-Royal_Belum_State_Park_by_boat.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Royal_Belum_State_Park_on_a_sunny_day.jpg/1280px-Royal_Belum_State_Park_on_a_sunny_day.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/The_Royal_Belum_State_Park%2C_Perak%2C_Malaysia.jpg/1280px-The_Royal_Belum_State_Park%2C_Perak%2C_Malaysia.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg/720px-Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg",
+      "/images/houseboat-01.png",
+      "/images/houseboat-02.png",
+      "/images/houseboat-03.png",
+      "/images/houseboat-04.png",
+      "/images/houseboat-05.png",
     ],
     packages: [
       {
@@ -134,13 +134,13 @@ export const hosts: Host[] = [
       "Captain Haris has been operating houseboats on Temenggor Lake for 8 years. He is known for his calm, safety-first approach and his skill at finding the best sunset spots and fishing grounds along the lake.",
     capacity: 16,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Lake_Kenyir%2C_on_the_Houseboat.jpg/1280px-Lake_Kenyir%2C_on_the_Houseboat.jpg",
+      "/images/houseboat-06.png",
     gallery: [
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Lake_Kenyir%2C_on_the_Houseboat.jpg/1280px-Lake_Kenyir%2C_on_the_Houseboat.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Land_and_Sea_Royal_Belum_State_Park.jpg/960px-Land_and_Sea_Royal_Belum_State_Park.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/The_Royal_Belum_State_Park%2C_Perak%2C_Malaysia.jpg/1280px-The_Royal_Belum_State_Park%2C_Perak%2C_Malaysia.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/a/a8/Belum_Rainforest_Resort_-_panoramio.jpg",
+      "/images/houseboat-06.png",
+      "/images/houseboat-07.png",
+      "/images/houseboat-04.png",
+      "/images/houseboat-01.png",
+      "/images/houseboat-08.png",
     ],
     packages: [
       {
@@ -206,13 +206,13 @@ export const hosts: Host[] = [
       "One of the few female houseboat operators on Temenggor Lake. Captain Zainab is a passionate conservationist who has built lasting relationships with Orang Asli communities and runs community-benefit tourism programs.",
     capacity: 20,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Royal_Belum_State_Park.jpg/1280px-Royal_Belum_State_Park.jpg",
+      "/images/houseboat-09.png",
     gallery: [
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Royal_Belum_State_Park.jpg/1280px-Royal_Belum_State_Park.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg/720px-Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kampung_Orang_Asli_Sungai_Chendon_1.jpg/1280px-Kampung_Orang_Asli_Sungai_Chendon_1.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Kampung_Orang_Asli_Sungai_Chendon_2.jpg/1280px-Kampung_Orang_Asli_Sungai_Chendon_2.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Royal_Belum_State_Park_on_a_sunny_day.jpg/1280px-Royal_Belum_State_Park_on_a_sunny_day.jpg",
+      "/images/houseboat-09.png",
+      "/images/houseboat-05.png",
+      "/images/houseboat-10.png",
+      "/images/houseboat-11.png",
+      "/images/houseboat-03.png",
     ],
     packages: [
       {
@@ -278,13 +278,13 @@ export const hosts: Host[] = [
       "Former Perak State Park ranger with 15 years of deep-jungle expertise. If there's a hidden waterfall or unmarked trail in Royal Belum, Captain Rashid has mapped it. He also runs the water confidence and survival skills programs.",
     capacity: 18,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Royal_Belum_State_Park_by_boat.jpg/1920px-Royal_Belum_State_Park_by_boat.jpg",
+      "/images/houseboat-02.png",
     gallery: [
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Royal_Belum_State_Park_by_boat.jpg/1920px-Royal_Belum_State_Park_by_boat.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Temenggor_Lake_West_Bridge_3.jpg/1280px-Temenggor_Lake_West_Bridge_3.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg/720px-Twin_Flow_of_Kooi_Waterfall%2C_Royal_Belum_Rainforest.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Royal_Belum_State_Park.jpg/1280px-Royal_Belum_State_Park.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Land_and_Sea_Royal_Belum_State_Park.jpg/960px-Land_and_Sea_Royal_Belum_State_Park.jpg",
+      "/images/houseboat-02.png",
+      "/images/houseboat-12.png",
+      "/images/houseboat-05.png",
+      "/images/houseboat-09.png",
+      "/images/houseboat-07.png",
     ],
     packages: [
       {
@@ -351,13 +351,13 @@ export const hosts: Host[] = [
       "Mother of three and certified nature educator. Her Junior Ranger program on the houseboat has taught over 500 children to appreciate the rainforest. She ensures every activity is safe and engaging for all ages.",
     capacity: 22,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Royal_Belum_State_Park_on_a_sunny_day.jpg/1280px-Royal_Belum_State_Park_on_a_sunny_day.jpg",
+      "/images/houseboat-03.png",
     gallery: [
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Royal_Belum_State_Park_on_a_sunny_day.jpg/1280px-Royal_Belum_State_Park_on_a_sunny_day.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Kampung_Orang_Asli_Sungai_Chendon_2.jpg/1280px-Kampung_Orang_Asli_Sungai_Chendon_2.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/a/a8/Belum_Rainforest_Resort_-_panoramio.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kampung_Orang_Asli_Sungai_Chendon_1.jpg/1280px-Kampung_Orang_Asli_Sungai_Chendon_1.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
+      "/images/houseboat-03.png",
+      "/images/houseboat-11.png",
+      "/images/houseboat-08.png",
+      "/images/houseboat-10.png",
+      "/images/houseboat-01.png",
     ],
     packages: [
       {
@@ -423,13 +423,13 @@ export const hosts: Host[] = [
       "A legendary local fisherman with 25+ years on Temenggor Lake. He knows every honey hole, feeding pattern, and seasonal migration route at Sg Tiang, Sg Gadung, and Sg Ruok. If the fish are biting, Captain Daud will find them.",
     capacity: 14,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Land_and_Sea_Royal_Belum_State_Park.jpg/960px-Land_and_Sea_Royal_Belum_State_Park.jpg",
+      "/images/houseboat-07.png",
     gallery: [
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Land_and_Sea_Royal_Belum_State_Park.jpg/960px-Land_and_Sea_Royal_Belum_State_Park.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Temenggor_Lake.jpg/1280px-Temenggor_Lake.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Temenggor_Lake_West_Bridge_3.jpg/1280px-Temenggor_Lake_West_Bridge_3.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Royal_Belum_State_Park_by_boat.jpg/1920px-Royal_Belum_State_Park_by_boat.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/a/a8/Belum_Rainforest_Resort_-_panoramio.jpg",
+      "/images/houseboat-07.png",
+      "/images/houseboat-01.png",
+      "/images/houseboat-12.png",
+      "/images/houseboat-02.png",
+      "/images/houseboat-08.png",
     ],
     packages: [
       {
