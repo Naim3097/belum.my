@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local tooling / working docs (kept out of the repo)
+.mcp.json
+.claude/
+BACKEND_PLAN.md
+PROJECT_OVERVIEW.md
+LEANX_INTEGRATION.md

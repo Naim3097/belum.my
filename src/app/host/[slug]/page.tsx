@@ -1,6 +1,3 @@
-"use client";
-
-import { use } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,18 +16,18 @@ import {
   MessageCircle,
   ArrowRight,
 } from "lucide-react";
-import { getHostBySlug, getListingsByHost } from "@/data/hosts";
+import { getHostBySlug, getListingsByHost } from "@/lib/queries/operators";
 
-export default function HostProfile({
+export default async function HostProfile({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = use(params);
-  const host = getHostBySlug(slug);
+  const { slug } = await params;
+  const host = await getHostBySlug(slug);
   if (!host) return notFound();
 
-  const listings = getListingsByHost(host.id);
+  const listings = await getListingsByHost(host.id);
 
   return (
     <main className="min-h-screen bg-slate-50">

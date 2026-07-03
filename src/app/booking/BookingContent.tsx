@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { createBooking } from "./actions";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -16,13 +17,22 @@ import {
   Lock,
   AlertCircle,
 } from "lucide-react";
-import { getListingById, getHostById } from "@/data/hosts";
+import type { Host, Listing } from "@/data/hosts";
 
-export default function BookingContent() {
+type LeanXBankOption = { payment_service_id: string; name: string };
+
+export default function BookingContent({
+  listing,
+  host,
+  leanxEnabled = false,
+  leanxBanks = [],
+}: {
+  listing: Listing | null;
+  host: Host | null;
+  leanxEnabled?: boolean;
+  leanxBanks?: LeanXBankOption[];
+}) {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const listingId = searchParams.get("listing");
-  const listing = listingId ? getListingById(listingId) : null;
 
   // Read date/guest params from listing page
   const paramCheckin = searchParams.get("checkin") || "";
@@ -37,7 +47,9 @@ export default function BookingContent() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [payMethod, setPayMethod] = useState<"card" | "fpx">("card");
+  const [payMethod, setPayMethod] = useState<"card" | "fpx">(
+    leanxEnabled ? "fpx" : "card"
+  );
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
@@ -46,7 +58,7 @@ export default function BookingContent() {
   const [submitting, setSubmitting] = useState(false);
   const [editDates, setEditDates] = useState(!paramCheckin);
 
-  if (!listing) {
+  if (!listing || !host) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
         <h1 className="font-display text-2xl font-bold text-navy-900">
@@ -65,7 +77,6 @@ export default function BookingContent() {
     );
   }
 
-  const host = getHostById(listing.hostId)!;
   const serviceFee = Math.round(listing.price * 0.05);
   const permitFee = 300;
   const total = listing.price + serviceFee + permitFee;
@@ -91,7 +102,7 @@ export default function BookingContent() {
     return errs;
   }
 
-  function handleConfirm() {
+  async function handleConfirm() {
     const errs = validate();
     if (errs.length > 0) {
       setErrors(errs);
@@ -99,18 +110,25 @@ export default function BookingContent() {
       return;
     }
     setSubmitting(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      const confirmParams = new URLSearchParams({
-        listing: listing!.id,
-        name: `${firstName} ${lastName}`,
-        email,
-        checkin,
-        guests,
-        total: total.toString(),
-      });
-      router.push(`/booking/confirmation?${confirmParams.toString()}`);
-    }, 1500);
+    const res = await createBooking({
+      packageId: listing!.id,
+      checkin,
+      checkout,
+      guests,
+      firstName,
+      lastName,
+      email,
+      phone,
+      payMethod,
+      bankId: leanxEnabled ? fpxBank : undefined,
+    });
+    // On success the server action redirects to the confirmation page;
+    // we only get here if it returned an error.
+    if (res?.error) {
+      setErrors([res.error]);
+      setSubmitting(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   // Format date for display
@@ -341,15 +359,31 @@ export default function BookingContent() {
                   className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-navy-900 focus:ring-1 focus:ring-navy-900"
                 >
                   <option value="">Choose bank…</option>
-                  <option>Maybank2u</option>
-                  <option>CIMB Clicks</option>
-                  <option>Public Bank</option>
-                  <option>RHB Now</option>
-                  <option>Hong Leong Connect</option>
-                  <option>AmOnline</option>
-                  <option>Bank Islam</option>
-                  <option>Bank Rakyat</option>
+                  {leanxEnabled && leanxBanks.length > 0 ? (
+                    leanxBanks.map((b) => (
+                      <option key={b.payment_service_id} value={b.payment_service_id}>
+                        {b.name}
+                      </option>
+                    ))
+                  ) : (
+                    <>
+                      <option>Maybank2u</option>
+                      <option>CIMB Clicks</option>
+                      <option>Public Bank</option>
+                      <option>RHB Now</option>
+                      <option>Hong Leong Connect</option>
+                      <option>AmOnline</option>
+                      <option>Bank Islam</option>
+                      <option>Bank Rakyat</option>
+                    </>
+                  )}
                 </select>
+                {leanxEnabled && (
+                  <p className="mt-2 text-xs text-slate-500">
+                    You&rsquo;ll be securely redirected to your bank to complete
+                    payment.
+                  </p>
+                )}
               </div>
             )}
           </div>

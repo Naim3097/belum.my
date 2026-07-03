@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { hosts } from "@/data/hosts";
+import { getHostBySlug } from "@/lib/queries/operators";
 
 export async function generateMetadata({
   params,
@@ -7,7 +7,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const host = hosts.find((h) => h.slug === slug);
+  const host = await getHostBySlug(slug);
 
   if (!host) {
     return { title: "Booking" };

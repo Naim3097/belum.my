@@ -6,6 +6,7 @@ import HowItWorks from "@/components/HowItWorks";
 import BlogPreview from "@/components/BlogPreview";
 import VendorTeaser from "@/components/VendorTeaser";
 import Footer from "@/components/Footer";
+import { getHosts } from "@/lib/queries/operators";
 
 export const metadata: Metadata = {
   title: "Belum Platform — Houseboat Booking for Temenggor Lake & Royal Belum",
@@ -14,12 +15,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://belumplatform.com" },
 };
 
-export default function Home() {
+export default async function Home() {
+  const hosts = await getHosts();
+
   return (
     <main className="min-h-screen bg-slate-50">
       <Navbar />
-      <Hero />
-      <FeaturedListings />
+      <Hero hosts={hosts} />
+      <FeaturedListings hosts={hosts} />
       <HowItWorks />
       <BlogPreview />
       <VendorTeaser />

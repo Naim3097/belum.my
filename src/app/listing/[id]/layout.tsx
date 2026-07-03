@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getListingById, getHostById } from "@/data/hosts";
+import { getListingById, getHostById } from "@/lib/queries/operators";
 
 export async function generateMetadata({
   params,
@@ -7,13 +7,13 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const listing = getListingById(id);
+  const listing = await getListingById(id);
 
   if (!listing) {
     return { title: "Listing Not Found" };
   }
 
-  const host = getHostById(listing.hostId);
+  const host = await getHostById(listing.hostId);
   const title = `${listing.title} — ${listing.hostName}`;
   const description = `${listing.description} ${listing.duration} for up to ${listing.pax} guests from RM${listing.price}. Book on Temenggor Lake, Royal Belum.`;
 

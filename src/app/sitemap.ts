@@ -1,12 +1,13 @@
 import type { MetadataRoute } from "next";
-import { hosts } from "@/data/hosts";
+import { getHosts } from "@/lib/queries/operators";
 import { blogPosts } from "@/data/blogs";
-import { activities } from "@/data/activities";
+import { getActivities } from "@/lib/queries/activities";
 
 const BASE = "https://belumplatform.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date().toISOString();
+  const [hosts, activities] = await Promise.all([getHosts(), getActivities()]);
 
   /* ─── Static pages ─── */
   const staticPages: MetadataRoute.Sitemap = [

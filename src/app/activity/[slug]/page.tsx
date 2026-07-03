@@ -13,7 +13,7 @@ import {
   CheckCircle2,
   Tag,
 } from "lucide-react";
-import { activities, getActivityBySlug, type Activity } from "@/data/activities";
+import { getActivities, getActivityBySlug } from "@/lib/queries/activities";
 
 const catIcons: Record<string, React.ElementType> = {
   Water: Waves,
@@ -22,15 +22,13 @@ const catIcons: Record<string, React.ElementType> = {
   Wildlife: Eye,
 };
 
-// Generate static params for all activities
-export function generateStaticParams() {
-  return activities.map((activity) => ({
-    slug: activity.slug,
-  }));
-}
-
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const activity = getActivityBySlug(params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const activity = await getActivityBySlug(slug);
   if (!activity) return { title: "Activity Not Found" };
   return {
     title: `${activity.title} | Belum Platform`,
@@ -44,13 +42,13 @@ export default async function ActivityDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const activity = getActivityBySlug(slug);
+  const activity = await getActivityBySlug(slug);
   if (!activity) notFound();
 
   const Icon = catIcons[activity.category] || Mountain;
 
   // Get related activities (same category, excluding current)
-  const related = activities
+  const related = (await getActivities())
     .filter((a) => a.category === activity.category && a.id !== activity.id)
     .slice(0, 3);
 

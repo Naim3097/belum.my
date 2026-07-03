@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Search, Calendar, Users, MapPin, Star, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { hosts } from "@/data/hosts";
+import type { Host } from "@/data/hosts";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -17,7 +17,7 @@ const fadeUp = {
   }),
 };
 
-export default function Hero() {
+export default function Hero({ hosts }: { hosts: Host[] }) {
   const router = useRouter();
   const featured = hosts[0]; // The Temenggor as hero host
 

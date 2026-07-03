@@ -1,8 +1,25 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Search, Menu, X, User, LogIn, HelpCircle, ShieldCheck, FileText } from "lucide-react";
+import {
+  Search,
+  Menu,
+  X,
+  User,
+  LogIn,
+  UserPlus,
+  LogOut,
+  HelpCircle,
+  ShieldCheck,
+  FileText,
+  CalendarCheck,
+  Anchor,
+  LayoutDashboard,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { logout } from "@/app/auth/actions";
+import type { UserRole } from "@/types/database.types";
 
 const navLinks = [
   { label: "Houseboats", href: "/search" },
@@ -14,9 +31,45 @@ const navLinks = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
+  const [role, setRole] = useState<UserRole | null>(null);
+  const [isHost, setIsHost] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close user menu on outside click
+  const load = useCallback(async () => {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      setEmail(null);
+      setRole(null);
+      setIsHost(false);
+      setLoaded(true);
+      return;
+    }
+    setEmail(user.email ?? null);
+    const [{ data: profile }, { data: op }] = await Promise.all([
+      supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(),
+      supabase
+        .from("operators")
+        .select("slug")
+        .eq("owner_id", user.id)
+        .maybeSingle(),
+    ]);
+    setRole(profile?.role ?? null);
+    setIsHost(!!op);
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    const supabase = createClient();
+    load();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
+    return () => sub.subscription.unsubscribe();
+  }, [load]);
+
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -26,6 +79,9 @@ export default function Navbar() {
     if (userMenu) document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [userMenu]);
+
+  const isAuthed = loaded && !!email;
+  const isAdmin = role === "admin";
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-slate-200">
@@ -63,12 +119,23 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/vendor"
-            className="text-sm font-medium text-slate-600 transition hover:text-navy-900"
-          >
-            List Your Houseboat
-          </Link>
+
+          {/* Airbnb-style host CTA — swaps once we know the user */}
+          {isHost ? (
+            <Link
+              href="/operator"
+              className="text-sm font-medium text-slate-600 transition hover:text-navy-900"
+            >
+              Switch to hosting
+            </Link>
+          ) : (
+            <Link
+              href="/become-a-host"
+              className="text-sm font-medium text-slate-600 transition hover:text-navy-900"
+            >
+              List Your Houseboat
+            </Link>
+          )}
 
           {/* User menu */}
           <div className="relative" ref={menuRef}>
@@ -82,48 +149,117 @@ export default function Navbar() {
 
             {userMenu && (
               <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
-                <Link
-                  href="/search"
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50"
-                  onClick={() => setUserMenu(false)}
-                >
-                  <Search className="h-4 w-4 text-slate-400" />
-                  Browse Houseboats
-                </Link>
-                <Link
-                  href="/activities"
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50"
-                  onClick={() => setUserMenu(false)}
-                >
-                  <ShieldCheck className="h-4 w-4 text-slate-400" />
-                  Activities
-                </Link>
+                {isAuthed ? (
+                  <>
+                    <div className="px-4 pb-2 pt-1">
+                      <p className="text-[11px] uppercase tracking-wider text-slate-400">
+                        Signed in as
+                      </p>
+                      <p className="truncate text-sm font-medium text-navy-900">
+                        {email}
+                      </p>
+                    </div>
+                    <div className="my-1 border-t border-slate-100" />
+
+                    {isAdmin && (
+                      <MenuLink
+                        href="/admin"
+                        icon={<LayoutDashboard className="h-4 w-4 text-slate-400" />}
+                        onClick={() => setUserMenu(false)}
+                        strong
+                      >
+                        Admin Dashboard
+                      </MenuLink>
+                    )}
+                    {isHost && (
+                      <MenuLink
+                        href="/operator"
+                        icon={<Anchor className="h-4 w-4 text-slate-400" />}
+                        onClick={() => setUserMenu(false)}
+                        strong
+                      >
+                        Hosting Dashboard
+                      </MenuLink>
+                    )}
+                    <MenuLink
+                      href="/account/bookings"
+                      icon={<CalendarCheck className="h-4 w-4 text-slate-400" />}
+                      onClick={() => setUserMenu(false)}
+                    >
+                      My Bookings
+                    </MenuLink>
+                    {!isHost && (
+                      <MenuLink
+                        href="/become-a-host"
+                        icon={<Anchor className="h-4 w-4 text-slate-400" />}
+                        onClick={() => setUserMenu(false)}
+                      >
+                        List your houseboat
+                      </MenuLink>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <MenuLink
+                      href="/login"
+                      icon={<LogIn className="h-4 w-4 text-navy-900" />}
+                      onClick={() => setUserMenu(false)}
+                      strong
+                    >
+                      Sign in
+                    </MenuLink>
+                    <MenuLink
+                      href="/signup"
+                      icon={<UserPlus className="h-4 w-4 text-slate-400" />}
+                      onClick={() => setUserMenu(false)}
+                    >
+                      Create account
+                    </MenuLink>
+                  </>
+                )}
+
                 <div className="my-1 border-t border-slate-100" />
-                <Link
+                <MenuLink
                   href="/help"
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50"
+                  icon={<HelpCircle className="h-4 w-4 text-slate-400" />}
                   onClick={() => setUserMenu(false)}
                 >
-                  <HelpCircle className="h-4 w-4 text-slate-400" />
                   Help Centre
-                </Link>
-                <Link
+                </MenuLink>
+                <MenuLink
                   href="/about"
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50"
+                  icon={<FileText className="h-4 w-4 text-slate-400" />}
                   onClick={() => setUserMenu(false)}
                 >
-                  <FileText className="h-4 w-4 text-slate-400" />
                   About Belum
-                </Link>
-                <div className="my-1 border-t border-slate-100" />
-                <Link
-                  href="/vendor"
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-navy-900 transition hover:bg-slate-50"
-                  onClick={() => setUserMenu(false)}
-                >
-                  <LogIn className="h-4 w-4 text-navy-900" />
-                  Operator Login
-                </Link>
+                </MenuLink>
+
+                {isAuthed ? (
+                  <>
+                    <div className="my-1 border-t border-slate-100" />
+                    <form action={logout}>
+                      <button
+                        type="submit"
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Log out
+                      </button>
+                    </form>
+                  </>
+                ) : (
+                  <>
+                    <div className="my-1 border-t border-slate-100" />
+                    <MenuLink
+                      href="/become-a-host"
+                      icon={<ShieldCheck className="h-4 w-4 text-navy-900" />}
+                      onClick={() => setUserMenu(false)}
+                      strong
+                    >
+                      List Your Houseboat
+                    </MenuLink>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -151,15 +287,106 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/vendor"
-            className="block py-2 text-sm font-medium text-amber-600 hover:text-amber-700"
-            onClick={() => setOpen(false)}
-          >
-            List Your Houseboat
-          </Link>
+
+          <div className="my-2 border-t border-slate-100" />
+          {isAuthed ? (
+            <>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="block py-2 text-sm font-medium text-navy-900"
+                  onClick={() => setOpen(false)}
+                >
+                  Admin Dashboard
+                </Link>
+              )}
+              {isHost ? (
+                <Link
+                  href="/operator"
+                  className="block py-2 text-sm font-medium text-navy-900"
+                  onClick={() => setOpen(false)}
+                >
+                  Switch to hosting
+                </Link>
+              ) : (
+                <Link
+                  href="/become-a-host"
+                  className="block py-2 text-sm font-medium text-amber-600"
+                  onClick={() => setOpen(false)}
+                >
+                  List Your Houseboat
+                </Link>
+              )}
+              <Link
+                href="/account/bookings"
+                className="block py-2 text-sm font-medium text-slate-700 hover:text-navy-900"
+                onClick={() => setOpen(false)}
+              >
+                My Bookings
+              </Link>
+              <form action={logout}>
+                <button
+                  type="submit"
+                  className="block py-2 text-sm font-medium text-rose-600"
+                >
+                  Log out
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/become-a-host"
+                className="block py-2 text-sm font-medium text-amber-600"
+                onClick={() => setOpen(false)}
+              >
+                List Your Houseboat
+              </Link>
+              <Link
+                href="/login"
+                className="block py-2 text-sm font-medium text-navy-900"
+                onClick={() => setOpen(false)}
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="block py-2 text-sm font-medium text-slate-700 hover:text-navy-900"
+                onClick={() => setOpen(false)}
+              >
+                Create account
+              </Link>
+            </>
+          )}
         </div>
       )}
     </header>
+  );
+}
+
+function MenuLink({
+  href,
+  icon,
+  children,
+  onClick,
+  strong,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  onClick: () => void;
+  strong?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition hover:bg-slate-50 ${
+        strong ? "font-medium text-navy-900" : "text-slate-700"
+      }`}
+    >
+      {icon}
+      {children}
+    </Link>
   );
 }

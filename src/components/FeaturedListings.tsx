@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, Star, MapPin, ShieldCheck, Users } from "lucide-react";
-import { hosts } from "@/data/hosts";
+import type { Host } from "@/data/hosts";
 
-export default function FeaturedListings() {
+export default function FeaturedListings({ hosts }: { hosts: Host[] }) {
   const [saved, setSaved] = useState<Set<string>>(new Set());
 
   function toggleSave(id: string) {
