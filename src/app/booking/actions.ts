@@ -104,7 +104,13 @@ export async function createBooking(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) {
+
+  // Guest checkout: an unauthenticated visitor can book without an account.
+  // Their booking has no customer_id, so it must be written with the
+  // service-role client (RLS insert requires customer_id = auth.uid()).
+  // Registered users keep RLS-scoped writes with their customer_id set.
+  const isGuest = !user;
+  if (isGuest && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     redirect(
       `/login?redirectTo=${encodeURIComponent(
         `/booking?listing=${input.packageId}`
@@ -140,12 +146,16 @@ export async function createBooking(
     pkg.pax
   );
 
-  const { data: booking, error: bookingError } = await supabase
+  // Guests bypass RLS via the service-role client; registered users write
+  // through their own RLS-scoped session.
+  const writeClient = isGuest ? createServiceRoleClient() : supabase;
+
+  const { data: booking, error: bookingError } = await writeClient
     .from("bookings")
     .insert({
       package_id: pkg.id,
       operator_id: pkg.operator_id,
-      customer_id: user.id,
+      customer_id: user?.id ?? null,
       guest_name: `${input.firstName.trim()} ${input.lastName.trim()}`.trim(),
       guest_email: input.email.trim(),
       guest_phone: input.phone.trim(),
@@ -166,7 +176,7 @@ export async function createBooking(
 
   if (bookingError) return { error: bookingError.message };
 
-  const { data: txn, error: txError } = await supabase
+  const { data: txn, error: txError } = await writeClient
     .from("transactions")
     .insert({
       booking_id: booking.id,

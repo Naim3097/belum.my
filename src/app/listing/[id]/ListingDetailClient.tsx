@@ -11,7 +11,6 @@ import {
   Users,
   Clock,
   Check,
-  Heart,
   Share,
   ChevronLeft,
   User,
@@ -19,6 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import type { Host, Listing } from "@/data/hosts";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export default function ListingDetailClient({
   listing,
@@ -33,8 +33,7 @@ export default function ListingDetailClient({
   const permitFee = 300;
   const total = listing.price + serviceFee + permitFee;
 
-  // State for save/share
-  const [isSaved, setIsSaved] = useState(false);
+  // State for share
   const [shareMsg, setShareMsg] = useState("");
   const [lightbox, setLightbox] = useState<number | null>(null);
 
@@ -89,14 +88,7 @@ export default function ListingDetailClient({
             >
               <Share className="h-4 w-4" /> {shareMsg || "Share"}
             </button>
-            <button
-              onClick={() => setIsSaved(!isSaved)}
-              className={`flex items-center gap-2 text-sm font-medium transition ${
-                isSaved ? "text-rose-500" : "text-slate-600 hover:text-rose-500"
-              }`}
-            >
-              <Heart className={`h-4 w-4 ${isSaved ? "fill-rose-500" : ""}`} /> {isSaved ? "Saved" : "Save"}
-            </button>
+            <FavoriteButton operatorId={listing.hostId} variant="inline" />
           </div>
         </div>
 

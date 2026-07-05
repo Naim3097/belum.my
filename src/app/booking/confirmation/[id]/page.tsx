@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import PaymentReturnPoller from "./PaymentReturnPoller";
 import {
   CheckCircle2,
@@ -43,15 +43,30 @@ export default async function ConfirmationPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: booking } = await supabase
+  const select =
+    "*, package:packages(name, duration), operator:operators(name, slug, captain, location)";
+
+  let { data: booking } = await supabase
     .from("bookings")
-    .select(
-      "*, package:packages(name, duration), operator:operators(name, slug, captain, location)"
-    )
+    .select(select)
     .eq("id", id)
     .maybeSingle();
 
-  // RLS ensures only the owning customer (or operator/admin) can read this.
+  // RLS returns nothing for a guest (unauthenticated) visitor. Guest bookings
+  // have no customer_id and are reachable only via this unguessable ID link, so
+  // fall back to a service-role read scoped to guest bookings. Registered
+  // bookings still require the owning customer / operator / admin via RLS.
+  if (!booking && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const admin = createServiceRoleClient();
+    const { data: guestBooking } = await admin
+      .from("bookings")
+      .select(select)
+      .eq("id", id)
+      .is("customer_id", null)
+      .maybeSingle();
+    booking = guestBooking;
+  }
+
   if (!booking) notFound();
 
   const pkg = booking.package;

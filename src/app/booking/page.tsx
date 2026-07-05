@@ -3,7 +3,7 @@ import BookingContent from "./BookingContent";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getListingById, getHostById } from "@/lib/queries/operators";
-import { createServiceRoleClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { getBankList, type LeanXBank } from "@/lib/leanx";
 
 export default async function BookingPage({
@@ -14,6 +14,12 @@ export default async function BookingPage({
   const { listing: listingId } = await searchParams;
   const listing = listingId ? await getListingById(listingId) : null;
   const host = listing ? await getHostById(listing.hostId) : null;
+
+  // Whether the visitor is signed in — drives the guest-vs-login choice.
+  const {
+    data: { user },
+  } = await (await createClient()).auth.getUser();
+  const isLoggedIn = !!user;
 
   // If the operator has LeanX connected, offer real bank options at checkout.
   let leanxEnabled = false;
@@ -50,6 +56,7 @@ export default async function BookingPage({
           host={host}
           leanxEnabled={leanxEnabled}
           leanxBanks={leanxBanks}
+          isLoggedIn={isLoggedIn}
         />
       </Suspense>
       <Footer />

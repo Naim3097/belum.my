@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/auth";
 
@@ -15,6 +15,7 @@ export async function setOperatorVerified(formData: FormData): Promise<void> {
   const id = String(formData.get("operatorId") ?? "");
   const verified = String(formData.get("verified") ?? "") === "true";
   await supabase.from("operators").update({ verified: !verified }).eq("id", id);
+  updateTag("operators"); // bust public listing caches
   revalidatePath("/admin/operators");
   revalidatePath("/admin");
 }
@@ -28,6 +29,7 @@ export async function setOperatorPublished(formData: FormData): Promise<void> {
     .from("operators")
     .update({ is_published: !published })
     .eq("id", id);
+  updateTag("operators"); // bust public listing caches
   revalidatePath("/admin/operators");
   revalidatePath("/admin");
 }

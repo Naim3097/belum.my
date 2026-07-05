@@ -8,7 +8,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {
   Star,
-  Heart,
   MapPin,
   Users,
   Clock,
@@ -17,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { type Listing, type Host } from "@/data/hosts";
+import FavoriteButton from "@/components/FavoriteButton";
 
 const categories: Host["category"][] = [
   "Houseboat",
@@ -235,10 +235,20 @@ function SearchContent({
                   Price Range
                 </h3>
                 <p className="mb-3 text-xs text-slate-500">
-                  RM{" "}
-                  {Math.min(...allListings.map((l) => l.price)).toLocaleString()}{" "}
-                  – RM{" "}
-                  {Math.max(...allListings.map((l) => l.price)).toLocaleString()}
+                  {allListings.length ? (
+                    <>
+                      RM{" "}
+                      {Math.min(
+                        ...allListings.map((l) => l.price)
+                      ).toLocaleString()}{" "}
+                      – RM{" "}
+                      {Math.max(
+                        ...allListings.map((l) => l.price)
+                      ).toLocaleString()}
+                    </>
+                  ) : (
+                    "No packages available"
+                  )}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -309,8 +319,6 @@ function SearchContent({
 }
 
 function ListingCard({ listing }: { listing: Listing }) {
-  const [saved, setSaved] = useState(false);
-
   return (
     <div className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg">
       <Link href={`/listing/${listing.id}`}>
@@ -323,14 +331,10 @@ function ListingCard({ listing }: { listing: Listing }) {
             className="object-cover"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
-          <button
-            onClick={(e) => { e.preventDefault(); setSaved(!saved); }}
-            className={`absolute right-3 top-3 rounded-full p-2 backdrop-blur transition hover:bg-white ${
-              saved ? "bg-white text-rose-500" : "bg-white/70 text-slate-700 hover:text-rose-500"
-            }`}
-          >
-            <Heart className={`h-4 w-4 ${saved ? "fill-rose-500" : ""}`} />
-          </button>
+          <FavoriteButton
+            operatorId={listing.hostId}
+            className="absolute right-3 top-3"
+          />
           {listing.verified && (
             <span className="absolute left-3 top-3 flex items-center gap-1 rounded bg-navy-900/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
               <ShieldCheck className="h-3 w-3" /> Verified

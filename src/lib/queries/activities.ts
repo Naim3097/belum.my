@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import { unstable_cache } from "next/cache";
+import { createAnonClient } from "@/lib/supabase/anon";
 import type { Activity } from "@/data/activities";
 import type { ActivityRow } from "@/types/database.types";
 
@@ -22,26 +23,45 @@ function mapActivity(a: ActivityRow): Activity {
   };
 }
 
+// Activities are a static public catalog — cache with the cookie-free anon
+// client and refresh at most hourly (tag "activities" for explicit busts).
+const fetchActivities = unstable_cache(
+  async () => {
+    const supabase = createAnonClient();
+    // `order by category` sorts by the enum's defined order
+    // (Water, Jungle, Culture, Wildlife), matching the original grouping.
+    const { data, error } = await supabase
+      .from("activities")
+      .select("*")
+      .order("category", { ascending: true })
+      .order("title", { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  },
+  ["activities-all"],
+  { tags: ["activities"], revalidate: 3600 }
+);
+
+const fetchActivityBySlug = unstable_cache(
+  async (slug: string) => {
+    const supabase = createAnonClient();
+    const { data, error } = await supabase
+      .from("activities")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (error) throw error;
+    return data;
+  },
+  ["activity-by-slug"],
+  { tags: ["activities"], revalidate: 3600 }
+);
+
 export async function getActivities(): Promise<Activity[]> {
-  const supabase = await createClient();
-  // `order by category` sorts by the enum's defined order
-  // (Water, Jungle, Culture, Wildlife), matching the original grouping.
-  const { data, error } = await supabase
-    .from("activities")
-    .select("*")
-    .order("category", { ascending: true })
-    .order("title", { ascending: true });
-  if (error) throw error;
-  return (data ?? []).map(mapActivity);
+  return (await fetchActivities()).map(mapActivity);
 }
 
 export async function getActivityBySlug(slug: string): Promise<Activity | null> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("activities")
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
-  if (error) throw error;
+  const data = await fetchActivityBySlug(slug);
   return data ? mapActivity(data) : null;
 }

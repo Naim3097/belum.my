@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import WishlistSync from "@/components/WishlistSync";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({ variable: "--font-space-grotesk", subsets: ["latin"] });
@@ -161,6 +162,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${playfair.variable} font-sans antialiased bg-slate-50 text-slate-900`}>
+        <WishlistSync />
         {children}
       </body>
     </html>

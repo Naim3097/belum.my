@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -95,6 +95,7 @@ export async function createOperator(
       .from("operators")
       .insert({ ...fields, slug });
     if (!error) {
+      updateTag("operators"); // new houseboat is publicly listable
       revalidatePath("/operator");
       redirect("/operator");
     }
@@ -147,6 +148,7 @@ export async function updateOperatorProfile(
     .eq("id", ctx.operatorId);
 
   if (error) return { error: error.message };
+  updateTag("operators"); // profile changes show on public pages
   revalidatePath("/operator/profile");
   revalidatePath("/operator");
   return { ok: true };
@@ -177,6 +179,7 @@ export async function createPackage(
     is_active: true,
   });
   if (error) return { error: error.message };
+  updateTag("operators"); // bust public listing caches
   revalidatePath("/operator/packages");
   return { ok: true };
 }
@@ -207,6 +210,7 @@ export async function updatePackage(
     .eq("id", id)
     .eq("operator_id", ctx.operatorId);
   if (error) return { error: error.message };
+  updateTag("operators"); // bust public listing caches
   revalidatePath("/operator/packages");
   return { ok: true };
 }
@@ -222,6 +226,7 @@ export async function togglePackageActive(formData: FormData): Promise<void> {
     .update({ is_active: !active })
     .eq("id", id)
     .eq("operator_id", ctx.operatorId);
+  updateTag("operators"); // bust public listing caches
   revalidatePath("/operator/packages");
 }
 
@@ -235,6 +240,7 @@ export async function deletePackage(formData: FormData): Promise<void> {
     .delete()
     .eq("id", id)
     .eq("operator_id", ctx.operatorId);
+  updateTag("operators"); // bust public listing caches
   revalidatePath("/operator/packages");
 }
 

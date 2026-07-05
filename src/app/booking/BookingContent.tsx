@@ -16,6 +16,8 @@ import {
   CreditCard,
   Lock,
   AlertCircle,
+  LogIn,
+  UserRound,
 } from "lucide-react";
 import type { Host, Listing } from "@/data/hosts";
 
@@ -26,11 +28,13 @@ export default function BookingContent({
   host,
   leanxEnabled = false,
   leanxBanks = [],
+  isLoggedIn = false,
 }: {
   listing: Listing | null;
   host: Host | null;
   leanxEnabled?: boolean;
   leanxBanks?: LeanXBankOption[];
+  isLoggedIn?: boolean;
 }) {
   const searchParams = useSearchParams();
 
@@ -38,6 +42,10 @@ export default function BookingContent({
   const paramCheckin = searchParams.get("checkin") || "";
   const paramCheckout = searchParams.get("checkout") || "";
   const paramGuests = searchParams.get("guests") || "";
+
+  // Signed-in visitors go straight to the form. Guests must first pick
+  // "Continue as guest" (or log in) before the booking form is shown.
+  const [guestMode, setGuestMode] = useState(false);
 
   // Form state
   const [checkin, setCheckin] = useState(paramCheckin);
@@ -80,6 +88,12 @@ export default function BookingContent({
   const serviceFee = Math.round(listing.price * 0.05);
   const permitFee = 300;
   const total = listing.price + serviceFee + permitFee;
+
+  // Show the guest-vs-login choice until a guest opts in (or is signed in).
+  const showChoice = !isLoggedIn && !guestMode;
+  const loginHref = `/login?redirectTo=${encodeURIComponent(
+    `/booking?${searchParams.toString()}`
+  )}`;
 
   // Min date = tomorrow
   const tomorrow = new Date();
@@ -156,6 +170,67 @@ export default function BookingContent({
         Confirm & Pay
       </h1>
 
+      {showChoice ? (
+        <div className="mx-auto max-w-lg">
+          <div className="rounded-2xl border border-slate-200 bg-white p-8">
+            <h2 className="mb-2 font-display text-xl font-bold text-navy-900">
+              How would you like to book?
+            </h2>
+            <p className="mb-6 text-sm text-slate-500">
+              You can check out as a guest, or sign in to track this trip in
+              your account.
+            </p>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => setGuestMode(true)}
+                className="flex w-full items-center gap-4 rounded-xl border border-slate-200 p-5 text-left transition hover:border-navy-900 hover:bg-slate-50"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                  <UserRound className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block font-bold text-navy-900">
+                    Continue as guest
+                  </span>
+                  <span className="block text-sm text-slate-500">
+                    No account needed — just your trip details.
+                  </span>
+                </span>
+              </button>
+
+              <Link
+                href={loginHref}
+                className="flex w-full items-center gap-4 rounded-xl border border-slate-200 p-5 text-left transition hover:border-navy-900 hover:bg-slate-50"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-900">
+                  <LogIn className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block font-bold text-navy-900">
+                    Log in
+                  </span>
+                  <span className="block text-sm text-slate-500">
+                    Save your details and view all your bookings.
+                  </span>
+                </span>
+              </Link>
+            </div>
+
+            <p className="mt-6 text-center text-sm text-slate-500">
+              New here?{" "}
+              <Link
+                href={`/signup?redirectTo=${encodeURIComponent(
+                  `/booking?${searchParams.toString()}`
+                )}`}
+                className="font-semibold text-navy-900 hover:underline"
+              >
+                Create an account
+              </Link>
+            </p>
+          </div>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
         {/* Left – form */}
         <div className="space-y-8 lg:col-span-3">
@@ -551,6 +626,7 @@ export default function BookingContent({
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

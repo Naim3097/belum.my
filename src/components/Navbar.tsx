@@ -16,9 +16,11 @@ import {
   CalendarCheck,
   Anchor,
   LayoutDashboard,
+  Heart,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { logout } from "@/app/auth/actions";
+import { useWishlist } from "@/lib/stores/wishlist";
 import type { UserRole } from "@/types/database.types";
 
 const navLinks = [
@@ -35,6 +37,7 @@ export default function Navbar() {
   const [role, setRole] = useState<UserRole | null>(null);
   const [isHost, setIsHost] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const savedCount = useWishlist((s) => s.ids.length);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async () => {
@@ -120,6 +123,20 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* Wishlist */}
+          <Link
+            href="/saved"
+            className="relative flex items-center gap-1.5 text-sm font-medium text-slate-600 transition hover:text-navy-900"
+          >
+            <Heart className="h-4 w-4" />
+            Saved
+            {savedCount > 0 && (
+              <span className="ml-0.5 rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+                {savedCount}
+              </span>
+            )}
+          </Link>
+
           {/* Airbnb-style host CTA — swaps once we know the user */}
           {isHost ? (
             <Link
@@ -187,6 +204,13 @@ export default function Navbar() {
                       onClick={() => setUserMenu(false)}
                     >
                       My Bookings
+                    </MenuLink>
+                    <MenuLink
+                      href="/saved"
+                      icon={<Heart className="h-4 w-4 text-slate-400" />}
+                      onClick={() => setUserMenu(false)}
+                    >
+                      Saved houseboats
                     </MenuLink>
                     {!isHost && (
                       <MenuLink
@@ -287,6 +311,19 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+
+          <Link
+            href="/saved"
+            className="flex items-center gap-2 py-2 text-sm font-medium text-slate-700 hover:text-navy-900"
+            onClick={() => setOpen(false)}
+          >
+            <Heart className="h-4 w-4" /> Saved
+            {savedCount > 0 && (
+              <span className="rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+                {savedCount}
+              </span>
+            )}
+          </Link>
 
           <div className="my-2 border-t border-slate-100" />
           {isAuthed ? (

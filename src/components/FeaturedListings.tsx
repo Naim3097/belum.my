@@ -1,23 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, Star, MapPin, ShieldCheck, Users } from "lucide-react";
+import { Star, MapPin, ShieldCheck, Users } from "lucide-react";
 import type { Host } from "@/data/hosts";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export default function FeaturedListings({ hosts }: { hosts: Host[] }) {
-  const [saved, setSaved] = useState<Set<string>>(new Set());
-
-  function toggleSave(id: string) {
-    setSaved((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
   return (
     <section className="bg-white px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -41,7 +31,12 @@ export default function FeaturedListings({ hosts }: { hosts: Host[] }) {
 
         {/* Grid */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {hosts.map((host, i) => (
+          {hosts.map((host, i) => {
+            const pricedPackages = host.packages.filter((p) => p.price > 0);
+            const fromPrice = pricedPackages.length
+              ? Math.min(...pricedPackages.map((p) => p.price))
+              : null;
+            return (
             <motion.div
               key={host.id}
               initial={{ opacity: 0, y: 20 }}
@@ -60,16 +55,10 @@ export default function FeaturedListings({ hosts }: { hosts: Host[] }) {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
-                  <button
-                    onClick={(e) => { e.preventDefault(); toggleSave(host.id); }}
-                    className={`absolute right-3 top-3 rounded-full p-2 backdrop-blur-sm transition hover:bg-white ${
-                      saved.has(host.id)
-                        ? "bg-white text-rose-500"
-                        : "bg-white/50 text-slate-700 hover:text-rose-500"
-                    }`}
-                  >
-                    <Heart className={`h-4 w-4 ${saved.has(host.id) ? "fill-rose-500" : ""}`} />
-                  </button>
+                  <FavoriteButton
+                    operatorId={host.id}
+                    className="absolute right-3 top-3"
+                  />
                   {host.verified && (
                     <div className="absolute left-3 top-3 flex items-center gap-1 rounded-md bg-navy-900/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
                       <ShieldCheck className="h-3 w-3" /> Verified
@@ -105,15 +94,18 @@ export default function FeaturedListings({ hosts }: { hosts: Host[] }) {
 
                   {/* price range from packages */}
                   <div className="mt-3 flex items-baseline gap-1">
-                    <span className="font-display text-lg font-bold text-navy-900">
-                      From RM{" "}
-                      {Math.min(
-                        ...host.packages
-                          .filter((p) => p.price > 0)
-                          .map((p) => p.price)
-                      ).toLocaleString()}
-                    </span>
-                    <span className="text-sm text-slate-500">/ trip</span>
+                    {fromPrice !== null ? (
+                      <>
+                        <span className="font-display text-lg font-bold text-navy-900">
+                          From RM {fromPrice.toLocaleString()}
+                        </span>
+                        <span className="text-sm text-slate-500">/ trip</span>
+                      </>
+                    ) : (
+                      <span className="font-display text-lg font-bold text-navy-900">
+                        Custom pricing
+                      </span>
+                    )}
                   </div>
                 </div>
               </Link>
@@ -124,7 +116,8 @@ export default function FeaturedListings({ hosts }: { hosts: Host[] }) {
                 View Landing Page →
               </Link>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Mobile CTA */}
